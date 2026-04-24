@@ -6,7 +6,8 @@
   <title>stvnmn.com</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Geist+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://www.google.com/recaptcha/api.js?render=6LdVUscsAAAAAGOgMTTEM3N856fx6KQDnq20DtWk"></script>
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -15,10 +16,13 @@
     }
 
     :root {
-      --bg: #0a0a0a;
-      --fg: #e8e4dc;
-      --muted: #4a4a4a;
-      --accent: #c9b99a;
+      --bg:       #F5F3EE;
+      --fg:       #1C1B18;
+      --muted:    #8A8A82;
+      --accent:   #4A6FA5;
+      --border:   #D8D5CC;
+      --tag-bg:   #E4EAF5;
+      --tag-fg:   #2E4D8A;
     }
 
     html, body {
@@ -29,6 +33,7 @@
       background: var(--bg);
       color: var(--fg);
       font-family: 'Geist Mono', monospace;
+      font-weight: 300;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -37,92 +42,81 @@
       overflow: hidden;
     }
 
-    /* Subtle noise texture */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-    }
-
     header, main, footer {
       position: relative;
-      z-index: 1;
     }
 
+    /* ── Header ── */
     header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.1s;
     }
 
     .wordmark {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      font-size: clamp(1.1rem, 2vw, 1.4rem);
-      letter-spacing: 0.08em;
+      font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+      font-weight: 400;
+      letter-spacing: 0.06em;
       color: var(--fg);
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.1s;
     }
 
     .status {
-      font-size: 0.65rem;
-      font-weight: 300;
+      font-size: 0.62rem;
+      font-weight: 400;
       letter-spacing: 0.15em;
       color: var(--muted);
       text-transform: uppercase;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .status span {
+    .status-dot {
       display: inline-block;
       width: 5px;
       height: 5px;
       background: var(--accent);
       border-radius: 50%;
-      margin-right: 0.5rem;
-      vertical-align: middle;
       animation: pulse 2.5s ease-in-out infinite;
+      flex-shrink: 0;
     }
 
+    /* ── Main ── */
     main {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1.2rem;
     }
 
     .headline {
-      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 11vw, 9rem);
       font-weight: 300;
-      font-size: clamp(4rem, 12vw, 10rem);
-      line-height: 0.92;
-      letter-spacing: -0.02em;
+      line-height: 0.94;
+      letter-spacing: -0.03em;
       color: var(--fg);
       opacity: 0;
-      animation: fadeUp 1s ease forwards 0.3s;
+      animation: fadeUp 0.8s ease forwards 0.25s;
     }
 
     .headline em {
-      font-style: italic;
+      font-style: normal;
       color: var(--accent);
     }
 
     .subline {
-      font-size: 0.7rem;
-      font-weight: 300;
-      letter-spacing: 0.2em;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
       color: var(--muted);
       text-transform: uppercase;
-      max-width: 260px;
-      line-height: 1.8;
+      line-height: 1.9;
       opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.55s;
+      animation: fadeUp 0.6s ease forwards 0.45s;
     }
 
+    /* ── Footer ── */
     footer {
       display: flex;
       justify-content: space-between;
@@ -130,85 +124,386 @@
     }
 
     .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
       opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.7s;
+      animation: fadeUp 0.6s ease forwards 0.6s;
     }
 
     .footer-note {
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
       color: var(--muted);
       text-transform: uppercase;
-      line-height: 1.8;
+      line-height: 1.9;
     }
+
+    .tags {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 0.58rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--tag-bg);
+      color: var(--tag-fg);
+      padding: 3px 8px;
+      border-radius: 2px;
+    }
+
+    .contact-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.6rem;
+      font-family: 'Geist Mono', monospace;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .contact-trigger::before {
+      content: '';
+      display: inline-block;
+      width: 14px;
+      height: 1px;
+      background: var(--accent);
+      transition: width 0.25s ease;
+    }
+
+    .contact-trigger:hover { opacity: 0.65; }
+    .contact-trigger:hover::before { width: 22px; }
 
     .footer-right {
       opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.8s;
+      animation: fadeUp 0.6s ease forwards 0.7s;
     }
 
     .year {
-      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 9vw, 7rem);
       font-weight: 300;
-      font-size: clamp(5rem, 10vw, 8rem);
       line-height: 1;
-      color: var(--muted);
-      opacity: 0.25;
+      color: var(--border);
       letter-spacing: -0.03em;
       user-select: none;
     }
 
-    /* Decorative line */
-    .rule {
+    /* ── Overlay ── */
+    .overlay {
       position: fixed;
-      top: 0;
-      left: 3rem;
-      width: 1px;
-      height: 100vh;
-      background: linear-gradient(to bottom, transparent, var(--muted) 30%, var(--muted) 70%, transparent);
-      opacity: 0.12;
-      z-index: 0;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      padding: 2.5rem 3rem;
+      pointer-events: none;
     }
 
+    .overlay.is-open { pointer-events: all; }
+
+    .overlay-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(245, 243, 238, 0.88);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .overlay.is-open .overlay-backdrop { opacity: 1; }
+
+    .overlay-panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 400px;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+    }
+
+    .overlay.is-open .overlay-panel {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .panel-label {
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 1.4rem;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--border);
+      padding: 0.8rem 0;
+      transition: border-color 0.2s ease;
+    }
+
+    .field:last-of-type { border-bottom: 1px solid var(--border); }
+    .field:focus-within { border-top-color: var(--accent); }
+
+    .field label {
+      font-size: 0.52rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+
+    .field input,
+    .field textarea {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--fg);
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 300;
+      width: 100%;
+      resize: none;
+      caret-color: var(--accent);
+    }
+
+    .field textarea { min-height: 76px; line-height: 1.7; }
+
+    .field input::placeholder,
+    .field textarea::placeholder { color: var(--border); }
+
+    .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.2rem;
+    }
+
+    .btn-close {
+      font-size: 0.57rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Geist Mono', monospace;
+      padding: 0;
+      transition: color 0.2s ease;
+    }
+
+    .btn-close:hover { color: var(--fg); }
+
+    .btn-submit {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      font-family: 'Geist Mono', monospace;
+      font-weight: 400;
+      padding: 0.6rem 1.1rem;
+      border-radius: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-submit:hover { opacity: 0.8; }
+    .btn-submit:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* Success */
+    .form-success { display: none; padding: 0.5rem 0; }
+    .form-success.is-visible { display: block; }
+
+    .form-success .s-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      line-height: 1.2;
+    }
+
+    .form-success .s-title em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .form-success .s-sub {
+      font-size: 0.6rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.6rem;
+    }
+
+    /* ── Animations ── */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
+      from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; }
-      50%       { opacity: 0.3; }
+      50%       { opacity: 0.25; }
     }
 
+    /* ── Responsive ── */
     @media (max-width: 600px) {
       body { padding: 1.8rem 1.5rem; }
-      .rule { display: none; }
-      .year { font-size: 4.5rem; }
+      .overlay { padding: 1.8rem 1.5rem; }
+      .overlay-panel { max-width: 100%; }
+      .year { font-size: 3.5rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="rule"></div>
-
   <header>
     <div class="wordmark">stvnmn.com</div>
-    <div class="status"><span></span>In progress</div>
+    <div class="status">
+      <span class="status-dot"></span>In progress
+    </div>
   </header>
 
   <main>
     <h1 class="headline">Coming<br /><em>Soon.</em></h1>
-    <p class="subline">Something is being built here. Check back later.</p>
+    <p class="subline">Portfolio &amp; work · Launching soon</p>
   </main>
 
   <footer>
     <div class="footer-left">
-      <p class="footer-note">Portfolio &amp; work<br />Launching soon</p>
+      <div class="tags">
+        <span class="tag">Data Engineering</span>
+        <span class="tag">Analytics</span>
+        <span class="tag">Reporting</span>
+      </div>
+      <p class="footer-note">Something is being built here.<br />Check back later.</p>
+      <button class="contact-trigger" id="openContact">Get in touch</button>
     </div>
     <div class="footer-right">
       <div class="year">2025</div>
     </div>
   </footer>
+
+  <!-- Contact overlay -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Contact form">
+    <div class="overlay-backdrop" id="backdrop"></div>
+    <div class="overlay-panel">
+      <p class="panel-label">Contact</p>
+
+      <form
+        class="contact-form"
+        id="contactForm"
+        action="https://formspree.io/f/mnjllwkp"
+        method="POST"
+      >
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="What's on your mind?" required></textarea>
+        </div>
+
+        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response" />
+
+        <div class="form-footer">
+          <button type="button" class="btn-close" id="closeContact">Dismiss</button>
+          <button type="submit" class="btn-submit" id="submitBtn">Send message</button>
+        </div>
+      </form>
+
+      <div class="form-success" id="formSuccess">
+        <p class="s-title">Message<br /><em>received.</em></p>
+        <p class="s-sub">I'll be in touch soon.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const overlay    = document.getElementById('overlay');
+    const backdrop   = document.getElementById('backdrop');
+    const openBtn    = document.getElementById('openContact');
+    const closeBtn   = document.getElementById('closeContact');
+    const form       = document.getElementById('contactForm');
+    const submitBtn  = document.getElementById('submitBtn');
+    const successMsg = document.getElementById('formSuccess');
+
+    function openOverlay() {
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => form.querySelector('input').focus(), 300);
+    }
+
+    function closeOverlay() {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    openBtn.addEventListener('click', openOverlay);
+    closeBtn.addEventListener('click', closeOverlay);
+    backdrop.addEventListener('click', closeOverlay);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeOverlay();
+    });
+
+    const RECAPTCHA_SITE_KEY = '6LdVUscsAAAAAGOgMTTEM3N856fx6KQDnq20DtWk';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
+      try {
+        const token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'submit' });
+        document.getElementById('g-recaptcha-response').value = token;
+
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (res.ok) {
+          form.style.display = 'none';
+          successMsg.classList.add('is-visible');
+          setTimeout(closeOverlay, 3200);
+        } else {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Try again';
+        }
+      } catch {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Try again';
+      }
+    });
+  </script>
 
 </body>
 </html>
